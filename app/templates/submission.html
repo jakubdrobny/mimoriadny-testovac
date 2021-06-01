@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% include "task_navigation.html" %}
+    <h4 class="pb-2">Detaily</h4>
+    <table class="table">
+        <tbody>
+            <tr style="background-color: #f0f0f0;">
+                <th class="table-secondary pl-4" scope="row" style="width: 50%;">Úloha:</th>
+                <td class="pl-4" style="font-weight: 500"><a href="{{ url_for('tasky.task', task_id=task['id']) }}">{{ task.title }}</a></td>
+            </tr>
+            <tr style="background-color: #f0f0f0;">
+                <th class="table-secondary pl-4" scope="row" style="width: 50%;">Verdikt: </th>
+                <td class="pl-4" style="font-weight: 500; background-color: {{ result_color }}">{{ result }}</td>
+            </tr>
+            <tr style="background-color: #f0f0f0;">
+                <th class="table-secondary pl-4" scope="row" style="width: 50%;">Čas odovzdania: </th>
+                <td class="pl-4" style="font-weight: 500">{{ submission.date_submitted.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            </tr>
+            <tr style="background-color: #f0f0f0;">
+                <th class="table-secondary pl-4" scope="row" style="width: 50%;">Jazyk: </th>
+                <td class="pl-4" style="font-weight: 500">{{ language }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 class="pb-2">Výsledky testov:</h4>
+    <table class="table table-bordered text-center" style="font-weight: 500;">
+        <thead>
+            <tr>
+                <th class="table-secondary">Test</th>
+                <th class="table-secondary">Verdikt</th>
+                <th class="table-secondary">Čas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for verdict in verdicts %}
+                <tr>
+                    <td style="width: 20%">#{{ loop.index }}</td>
+                    <td style="background-color: {{ verdict_colors[loop.index - 1] }}; style: 40%;">{{ verdict }}</td>
+                    <td style="width: 20%">{{ submission.times[loop.index - 1] }} ms</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h4 class="pb-2">Kód</h4>
+    <pre id="submission-code" class="prettyprint linenums">{{ submission.program }}</pre>
+{% endblock content %}

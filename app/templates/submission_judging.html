@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% include "task_navigation.html" %}
+    <h4 class="pb-2">Detaily</h4>
+    <table class="table">
+        <tbody>
+            <tr style="background-color: #f0f0f0;">
+                <th class="table-secondary pl-4" scope="row" style="width: 50%;">Úloha:</th>
+                <td class="pl-4" style="font-weight: 500"><a href="{{ url_for('tasky.task', task_id=task.task_id) }}">{{ task.title }}</a></td>
+            </tr>
+            <tr style="background-color: #f0f0f0;">
+                <th class="table-secondary pl-4" scope="row" style="width: 50%;">Verdikt: </th>
+                <td class="pl-4">
+                    <div class="progress" style="height: 1.75em; position: relative; top: 50%">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%; color: black; font-weight: bold">{{ progress }} %</div>
+                    </div>
+                </td>  
+            </tr>
+            <tr style="background-color: #f0f0f0;">
+                <th class="table-secondary pl-4" scope="row" style="width: 50%;">Čas odovzdania: </th>
+                <td class="pl-4" style="font-weight: 500">{{ submission.date_submitted.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            </tr>
+            <tr style="background-color: #f0f0f0;">
+                <th class="table-secondary pl-4" scope="row" style="width: 50%;">Jazyk: </th>
+                <td class="pl-4" style="font-weight: 500">{{ language }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 class="pb-2">Kód</h4>
+    <pre id="submission-code" class="prettyprint linenums">{{ submission.program }}</pre>
+{% endblock content %}

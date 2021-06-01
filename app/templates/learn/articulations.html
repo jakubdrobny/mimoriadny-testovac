@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block content %}
+    <p>
+        <a href="{{ url_for('learn.topics') }}">Študijné materiály</a><br>
+    </p>
+    <h2>Mosty a artikulácie</h2><br>
+    <p>
+        Zamerajme sa najprv na mosty. Mosty sú hrany v grafe, ktoré ak by sme odstránili, graf by sa rozpadol na viac komponentov. Ako nájsť takéto mosty.
+        <br><br>
+        Ak si budeme pre každý vrchol udržiavať čas v zozname $tin$ a najmenší vstupný čas spomedzi jeho a všetkých jeho priamych rodičov v zozname $low$. Hrana $(v, u)$ je potom most ak $tin[v] < low[u]$, čo znamená, že sa dá do vrcholu $u$ dostať z nejakého predka vrcholu $v$. Hodnota $low[v]$ pre vrchol $v$ je teda $(tin[v], tin[p], low[u])$, kde $p$ sú všetci priamy rodičia vrcholu $v$, $u$ sú všetci priamy synovia vrcholu $v$ a $min$ je funkcia, ktorá vráti minimum.
+    </p><br>
+    <pre class="prettyprint"><code class="language-python"># Implementácia v Pythone
+mosty = []
+vis = [False] * pocet_vrcholov
+tin, low = [-1] * pocet_vrcholov, [-1] * pocet_vrcholov
+timer = 0
+
+def dfs(v, p = -1):
+    vis[v] = True
+    tin[v] = low[v] = timer
+    timer += 1
+    for u in g[v]:
+        if u == p:
+            continue
+        if vis[u]:
+            low[v] = min(low[v], low[u])
+        else:
+            dfs(u, v)
+            low[v] = min(low[v], low[u])
+            if tin[v] < low[u]:
+	          mosty.append((v, u))</code></pre><br>
+    <p>
+        Hľadanie artikulácií bude fungovať podobne, avšak s dvoma zmenami. Prvá je ze podmienka $tin[v] < low[u]$, už nebude ostrá, pretože ak by sme odstránili vrchol $v$ a bol by priamym rodičom nejakého vrcholu v jeho podstrome, tak po odstránení by sa graf rozpadol na viacero komponentov. Druhá je, že ak ide o koreň stromu, tak ten je artikulácia iba v prípade ak má viac ako jedno dieťa.
+    </p><br>
+    <pre class="prettyprint"><code class="language-python"># Implementácia v Pythone
+artikulacie = []
+vis = [False] * pocet_vrcholov
+tin, low = [-1] * pocet_vrcholov, [-1] * pocet_vrcholov
+timer = 0
+
+def dfs(v, p = -1):
+    vis[v] = True
+    tin[v] = low[v] = timer
+    timer += 1
+    kids = 0
+    for u in g[v]:
+        if u == p:
+            continue
+        if vis[u]:
+            low[v] = min(low[v], low[u])
+        else:
+            dfs(u, v)
+            low[v] = min(low[v], low[u])
+            if tin[v] <= low[u] and p != -1:
+	          artikulacie.append(v)
+		kids += 1
+    if p == -1 and kids > 1:
+        artikulacie.append(v)</code></pre><br><br>
+{% endblock content %}

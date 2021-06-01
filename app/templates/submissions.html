@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div style="border-left: 1px solid transparent;">
+        {% include "task_navigation.html" %}
+    </div>
+    <table class="table table-bordered table-striped text-center">
+        <thead>
+            <tr class="table-secondary">
+                <th style="font-weight: 500;">Čas</th>
+                <th style="font-weight: 500;">Jazyk</th>
+                <th style="font-weight: 500;">Rýchlosť kódu</th>
+                <th style="font-weight: 500;">Veľkosť kódu</th>
+                <th style="font-weight: 500;">Verdikt</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for submission in submissions %}
+                <tr>
+                    <td>{{ submission.date_submitted.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ languages[loop.index - 1] }}</td>
+                    <td>{{ code_times[loop.index - 1] }}</td>
+                    <td>{{ submission.program | length }} znakov</td>
+                    <td style="background-color: {{ verdicts_colors[loop.index - 1] }};">
+                        {% if verdicts[loop.index - 1] == 2 %}
+                            <i class="bi bi-arrow-repeat"></i>
+                        {% elif verdicts[loop.index - 1] %}
+                            <i class="bi bi-check"></i>
+                        {% else %}
+                            <i class="bi bi-x"></i>
+                        {% endif %}
+                    </td>
+                    <td><a href="{{ url_for('submis.submission', submission_id=submission.id) }}"><i class="bi bi-link"></i></a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

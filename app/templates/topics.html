@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Študijné materiály</h2>
+    <ul>
+        <li style="padding: .25em"><a href="{{ url_for('learn.heap') }}">Halda</a><br></li>
+        <li style="padding: .25em"><a href="{{ url_for('learn.dijkstra') }}">Dijkstra</a><br></li>
+        <li style="padding: .25em"><a href="{{ url_for('learn.unionfind') }}">Union Find</a></li>
+        <li style="padding: .25em"><a href="{{ url_for('learn.articulations') }}">Mosty a artikulácie</a></li>
+    </ul>
+{% endblock content %}

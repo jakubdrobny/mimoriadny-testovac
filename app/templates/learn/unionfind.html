@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block content %}
+    <p>
+        <a href="{{ url_for('learn.topics') }}">Študijné materiály</a><br>
+    </p>
+    <h2>Union Find</h2><br>
+    <p>
+        Dátová štruktúra union-find alebo disjoint-set je určená na ukladania od seba nezávislých setov a ich vlastností. Pomocou tejto dátovej štruktúry vieme vytvárať nové sety, spájať ich a hľadať informácie o setoch. Sami o sebe tieto operácie nie sú rýchle, ale ak je veľa tak ich amortizovaná časová zložitosť je $O(α(n))$, kde $α(n)$</i> je inverzná Ackermannova funkcia, ktorá rastie tak pomaly, že pre vpodstate akékoľvek veľké číslo je jej hodnota najviac $4$. Amortizovaná ak bude implementácia urobená tak sa aby sa jednotlivé sety vhodne počas operácii upravovali. Využitie tejto dátovej štruktúry je napríklad v Kruskalovom algoritme, ktorý hľadá najlacnejšiu kostru grafu.
+        <br><br>
+        Ak chceme reprezentovať takúto dátovú štruktúru, potrebujeme pre každý prvok vedieť jeho rodiča a veľkosť setu v ktorom sa nachádza alebo jeho rank, čo sú obidve iba celočíselné premenné. Väčšinou sa na to použijú dva zoznamy, kde na indexe $i$ je rodič prvku $i$ a velkosť setu v ktorom sa prvok $i$ nachádza. Na začiatku je každý prvok svoj rodič a velkosť setu je $1$.
+        <br><br>
+        Funkcia na nájdenie koreňa setu <code class="code-text">find</code> funguje tak, že ideme po rodičoch pokial nie sme na prvku, ktorý je si sám svojím rodičom, to je koreň setu. Na dosiahnutie optimálnej časovej zložitosti musíme však chodenie po rodičoch ako rekurzívne volanie funkcie a pri návrate naspäť každému prvku zmeniť rodiča na koreň.
+    </p><br>
+    <pre class="prettyprint"><code class="language-python"># Implementácia v Pythone
+def find(x):
+    while parent[x] != x:
+    parent[x] = find(parent[x])
+    return parent[x]</code></pre><br>
+    <p>
+        Existujú aj iné implementácie tejto funkcie, ktoré majú buď konštantnú pamäťovú zložitosť alebo lepšiu časovú zložitosť v priemer, avšak v najhoršom prípade ju majú stále takú istú.
+        <br><br>
+        Funkcia spojenia setov <code class="code-text">merge</code> najprv nájde korene oboch setov a následne ich spojí tak, že ako rodiča jedného z koreňov nastaví druhý koreň. Tu však treba správne vybrať, ktorý set dáme do ktorého na zachovanie optimálnej časovej zložitosti. Tu použijeme informácie o velkostiach jednotlivých setov a to tak, že menší set vložíme do väčšieho. Ak by sme spájali podľa ranku, čo je niečo ako horná hranica hĺbky stromu tvorením daným setom, tak ak majú dva sety odlišné ranky, tak opäť dávame set s menším rankom do setu s väčším rankom a ranky sa nemenia. Ak majú rovnaký rank, tak je jedno do ktorého, len treba zvýšiť rank setu, do ktorého sme spájali.
+    </p><br>
+    <pre class="prettyprint"><code class="language-python"># Implementácie v Pythone
+def merge_by_rank(x, y):
+    x, y = find(x), find(y)
+    if x == y:
+        return
+    if size[x] < size[y]:
+        x, y = y, x
+    size[x] += size[y]
+    parent[y] = x
+
+def merge_by_rank(x, y):
+    x, y = find(x), find(y)
+    if x == y:
+        return
+    if rank[x] < rank[y]:
+        x, y = y, x
+    parent[y] = x
+    if rank[x] == rank[y]:
+        rank[x] += 1</code></pre><br><br>
+{% endblock content %}

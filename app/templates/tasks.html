@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2 class="mb-4">
+        Úlohy
+    </h2>
+    {% for task in tasks %}
+        <div class="content-section {{ task.status }}">
+            <a class="task-link" href="{{ url_for('tasky.task', task_id=task) }}">{{ titles[loop.index - 1] }}</a>
+        </div>
+    {% endfor %}
+{% endblock content %}

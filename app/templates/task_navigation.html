@@ -1,0 +1,10 @@
+<h2 class="mb-3">{{ task['title'] }}</h2>
+{% if statement %}
+    <div class="pb-2 pt-2 pl-3 task-content">
+{% else %}
+    <div class="pb-2 pt-2 pl-3 mb-3" style="border-top: 1px solid #ced4da; border-bottom: 1px solid #ced4da;">
+{% endif %}
+    <a href="{{ url_for('tasky.task', task_id=task['id']) }}">Zadanie</a> |
+    <a href="{{ url_for('tasky.submit_task', task_id=task['id']) }}">Odovzdať</a> | 
+    <a href="{{ url_for('submis.submissions', task_id=task['id']) }}">Submity</a>
+</div>

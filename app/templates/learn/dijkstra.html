@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+    <p>
+        <a href="{{ url_for('learn.topics') }}">Študijné materiály</a><br>
+    </p>
+    <h2>Dijkstra</h2><br>
+    <p>
+        Dijkstrov algoritmus sa používa na nájdenie najkratšej cesty medzi vrcholmi v ováhovanom grafe. Má mnoho variantov, ale najčastejšie sú nájdenie najkratšej cesty z nejakého vrcholu do všetkých ostatných vrcholov alebo iba do jedného, vtedy nám stačí program ukončiť ak sme ho už spracovali a nemusíme spracovať všetky vrcholy.
+        <br><br>
+        Idea algoritmu je nasledovná: Pre každý vrchol v, začínajúc prvým sa pozrieme na každého z jeho susedov u a ak niektorý z nich ešte nebol spracovaný a ide do neho z vrcholu v kratšia cesta, tak ho pridáme do radu na spracovanie a zmeníme najkratšiu vzdialenosť k nemu. Z radu vrcholov na spracovanie vždy vyberáme ten, ku ktorému ide najkratšia trasa a akonáhle ho z radu vyberieme, označíme ho za spracovaný.
+        <br><br>
+        Na pohľad má tento algoritmus časovú zložitosť $O(V^2E)$, kde $V$ je počet vrcholov a $E$ je počet hrán, pretože pre každý vrchol musíme prejsť všetkých jeho susedov a nájsť ďalší na spracovanie. Posledný zo spomenutých krokov môžeme zlepšiť na časovú zložitosť $O(log V)$ pomocou minimovej haldy, ktorá nám vráti vrchol s najmenšou vzdialenosťou v logaritmickom čase a tým pádom sa nám časová zložitosť zlepší na $O((V + E) log V)$.
+        <br><br>
+        Prečo však tento algoritmus vždy nájde najkratšiu trasu a prečo nebude fungovať ak v grafe máme záporne hrany. Ak hľadáme máme už nejaké spracované, tak vzdialenosť do najbližších nespracovaných vrcholov bude určite najmenšia, pretože ak by nebola, tak by musel existovať cesta, ktorá by išla cez nejaké spracované a nejaký ďalší nespracovaný, avšak už tá časť cesty po spracovaných vrcholoch je rovnako dlhá, čiže odbočka nespracovaného by nám iba pridala a preto nebude tento algoritmus fungovať v prípade záporných hrán, lebo by nikdy neskončil.
+    </p><br>
+    <pre class="prettyprint"><code class="languange-python"># Implementácia v Python, ak je graf uložený pomocou zoznamu susedov
+def dijkstra(graf, pocet_vrcholov, zaciatok):
+
+    navstiveny = [0] * pocet_vrcholov
+    navstiveny[zaciatok] = 1
+
+    vzdialenost = [10 ** 18] * pocet_vrcholov
+    vzdialenost[zaciatok] = 0
+
+    halda = []
+    heappush(halda, (0, 0))
+
+    while halda:
+        _, vrchol = heappop(halda)
+        navstiveny[vrchol] = 1
+
+        for sused, dlzka in graf[vrchol]:
+            if not navstiveny[sused] and vzdialenost[vrchol] + dlzka < vzdialenost[sused]:
+                vzdialenost[sused] = vzdialenost[vrchol] + dlzka
+                heappush(halda, (vzdialenost[sused], sused))
+
+    return vzdialenost</code></pre><br><br>
+{% endblock content %}

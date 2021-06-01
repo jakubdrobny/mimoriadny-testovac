@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" sizes="16x16">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='main.css') }}">
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='icons/font/bootstrap-icons.css') }}">
+
+    <style>
+        li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
+        	list-style-type: decimal !important;
+        }
+    </style>
+
+    {% if title %}
+        <title>{{ title }} - testovač</title>
+    {% else %}
+        <title>mimoriadny testovač</title>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-spmndag static-top">
+            <div class="container">
+                <a href="/"><img class="logo" src="{{ url_for('static', filename='logo.png') }}"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggle">
+                    <a class="navbar-brand mr-4" href="/">Mimoriadny testovač</a>
+                    <div class="navbar-nav mr-auto">
+                        <a class="nav-item nav-link" href="{{ url_for('main.home') }}">Domov</a>
+                        <a class="nav-item nav-link" href="{{ url_for('main.about') }}">O testovači</a>
+                        <a class="nav-item nav-link" href="{{ url_for('tasky.tasks') }}">Úlohy</a>
+                        <a class="nav-item nav-link" href="{{ url_for('learn.topics') }}">Študijné materiály</a>
+                        <a class="nav-item nav-link" href="{{ url_for('stats.leaderboard') }}">Výsledkovka</a>
+                    </div>
+                    <div class="navbar-nav">
+                        {% if current_user.is_authenticated %}
+                            <a class="nav-item nav-link" href="{{ url_for('users.profile') }}">{{ current_user.username }}</a>
+                            <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Odhlásiť sa</a>
+                        {% else %}
+                            <a class="nav-item nav-link" href="{{ url_for('users.login') }}">Prihlásiť sa</a>
+                            <a class="nav-item nav-link" href="{{ url_for('users.register') }}">Registrovať sa</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="container mt-4">
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML-full"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [["$", "$"], ["\(", "\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                processEscapes: true
+            },
+            config: ["MMLorHTML.js"],
+            jax: ["input/TeX", "output/HTML-CSS", "output/NativeMML"],
+            extensions: ["MathMenu.js", "MathZoom.js"]
+        });
+    </script>
+</body>
+</html>

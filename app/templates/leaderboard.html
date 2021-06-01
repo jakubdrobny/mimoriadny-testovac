@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2 class="pb-4">Výsledkovka</h2>
+    <table class="table">
+        <tr>
+            <th>#</th>
+            <th>Používateľské meno</th>
+            <th>Počet vyriešených úloh</th>
+        </tr>
+        {% for entry in table %}
+            <tr>
+                <td>{{ entry[0]}}.</td>
+                <td>{{ entry[1]}}</td>
+                <td>{{ entry[2]}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock content %}

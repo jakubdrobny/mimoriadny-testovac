@@ -1,0 +1,80 @@
+body {
+    background: #fafafa;
+    color: #333333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: #444444;
+	margin-left: 0;
+}
+
+.bg-spmndag {
+	background-color: #365F91;
+}
+
+.logo {
+	height: 1.75em;
+	width: 1.75em;
+}
+
+.tab::before {
+	content: "\00a0\00a0\00a0\00a0";
+}
+
+.site-header .navbar-nav .nav-link {
+	color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+	color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+	font-weight: 500;
+}
+
+.content-section {
+	background: #ffffff;
+	padding: 10px 20px;
+	border: 1px solid #dddddd;
+	border-radius: 3px;
+}
+
+.task-list-item-admin {
+	background: #ffffff;
+	border: 1px solid #dddddd;
+	border-radius: 7px;
+	padding: 10px 0;
+	margin: 0;
+}
+
+.task-content {
+	border-top: 1px solid grey;
+	border-left: 1px solid grey;
+}
+
+.task-link {
+	color: black;
+	font-weight: 500;
+}
+
+.task-link:hover {
+	color: #0084ff;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+#submission-code {
+	max-height: 350px;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+
+
+.code-text {
+	padding: 2px 4px;
+	font-size: 90%;
+	color: #c7254e;
+	background-color: #f9f2f4;
+	border-radius: 0;
+}

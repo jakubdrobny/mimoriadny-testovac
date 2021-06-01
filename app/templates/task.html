@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% include "task_navigation.html" %}
+    <div class="pl-3 pt-3 task-content">
+        {{ content | safe }}
+    </div>
+{% endblock content %}

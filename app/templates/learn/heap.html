@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block content %}
+    <p>
+        <a href="{{ url_for('learn.topics') }}">Študijné materiály</a><br>
+    </p>
+    <h2>Halda</h2><br/>
+    <p>
+        Heap, alebo halda, je takmer úplná stromová štruktúra, ktorá má vlastnosť, že hodnota v každom z vrcholov je väčšia alebo rovná ako hodnoty vo všetkých jeho synoch (nielen priamych). Halda s vyššie popísanými vlastnosťami sa volá maximová, pretože v koreni stromu je najväčšia hodnota, ak by sme však zmenili druhú podmienku, teda že hodnota v každom z vrcholov je menšia alebo rovná ako hodnoty vo všetkých jeho synoch (nielen priamych), tak by sme mali v koreni mali vrchol s najmenšou hodnotou, teda minimovú haldu. Vďaka týmto dvom vlastnostiam dokáže halda robiť operácie ako vypísať maximum, odstrániť maximum alebo pridať nový prvok v čase rýchlejšom za použitia hrubej sily v lineárnom čase. Často je používaná na zoradenie prvkov podľa priorít, resp. aby sa vedel vybrať prvok s najväčšou, resp. najnižšou prioritou, preto sa niekedy zvykne nazývať aj prioritná fronta.
+        <br/><br/>
+        Halda je takmer úplná stromová štruktúra, čo znamená, že má čo najmenšiu hĺbku. Ako však takúto dátovú štruktúru implementovať. Najjednoduchšia implementácia sa nazýva binárna halda. V tomto type haldy má každý vrchol maximálne dvoch synov a jeho hĺbka je log2n, kde n je počet vrcholov v halde. Vďaka tomu vieme tento typ haldy implementovať iba ako obyčajný zoznam. Vrcholy budú jednotlivé prvky v zozname, koreň bude na prvom mieste a pre zvyšok zoznamu bude platiť, že synovia prvku s indexom $i$ sa v zozname nachádzajú na pozíciach s indexami $2 * i + 1$ a $2 * i + 2$ a otec prvku s indexom $i$ sa v zozname nachádza na pozícii s indexom $floor( (i - 1) / 2)$, kde $floor$ je funkcia, ktorá zaokrúhli číslo nadol.
+        <br/><br/>
+        Vieme teda zistiť najmenší, resp. najväčší prvok v konštantnom čase aby opýtaním sa, čo je v zozname na prvej pozícii. Ako však implementovať ostatné operácie. Ukážme si najprv vloženie nového prvku. Najprv ho iba pridáme na koniec zoznamu a následne ho budeme vymieňať s jeho otcom, pokiaľ nebude menší alebo rovný ako jeho otec alebo už nemá žiadne otca, teda je najväčším prvkom, ak hovoríme o maximovej halde. Minimová je to isté iba podmienka sa trochu líši, tak ako je spomenuté v prvom odstavci. 
+    </p><br>
+    <pre class="prettyprint"><code class="language-python"># Implementácia v Pythone
+def vloz(prvok):
+    pozicia = len(halda)
+    halda.append(prvok)
+    while pozicia != 0 and prvok > halda[(pozicia - 1) // 2]:
+        halda[pozicia], halda[(pozicia - 1) // 2] = halda[(pozicia - 1) // 2], halda[pozicia]
+        pozicia = (pozicia - 1) // 2</code></pre><br>
+    <p>V implementácii druhej funkcie, odstránenie najväčšieho prvku použijeme podobný spôsob, ale tento krát pôjdeme smerom nadol a to tak, že najprv odstránime prvok z koreňa, na jeho miesto dosadíme posledný, najmenší, prvok v zozname a ten následne zamieňame s väčším so synov, pokiaľ je v nejakom z nich ostro väčšia hodnota, pre minimovú haldu platí to isté, len zamieňame pokiaľ je v nejakom zo synov ostro menšia hodnota.</p><br>
+    <pre class="prettyprint"><code class="language-python"># Implementácia v Pythone
+def odstran():
+    najvacsi = halda[0]
+    halda[0] = halda.pop()
+    pozicia = 0
+    while pozicia != len(halda) - 1:
+        nova_pozicia = pozicia
+        if 2 * pozicia + 1 < len(halda) and halda[2 * pozicia + 1] > halda[pozicia]:
+            nova_pozicia = 2 * pozicia + 1
+        if 2 * pozicia + 2 < len(halda) and halda[2 * pozicia + 2] > halda[pozicia]:
+            nova_pozicia = 2 * pozicia + 2
+        if pozicia != nova_pozicia:
+            halda[pozicia], halda[nova_pozicia] = halda[nova_pozicia], halda[pozicia]
+        else:
+            break
+    return najvacsi</code></pre><br>
+    <p>
+        Obidve tieto operácie má časovú zložitosť $O(log n)$, keďže vždy pôjdeme vyššie, resp. nižšie o maximálne <code class="code-text">hlbka haldy - 1</code> úrovní.
+        <br><br>
+        Python prichádza s modulom heapq, v ktorom sú funkcie ako <code class="code-text">heappush(halda, prvok)</code> a <code class="code-text">heappop(halda)</code>, ktoré fungujú rovnako ako naše funkcie <code class="code-text">vlož(prvok)</code> a <code class="code-text">odstráň()</code>, avšak treba im ako argument dať aj haldu, na ktorej chceme danú operáciu uskutočniť.
+        <br><br>
+        V štandardnej knižnici C++ STL je modul <code class="code-text">queue</code>, v ktorom je trieda <code class="code-text">priority_queue&lt;int&gt;</code>, ktorá má funkcie takmer totožné s našimi/pythonovskými <code class="code-text">heapq</code> funkciami, avšak sú implementované ako metódy triedy, čize ich voláme ako <code class="code-text">halda.push(prvok)</code> a <code class="code-text">halda.pop()</code>. Druhá z menovaných metód však nevracia odstránenú hodnotu, tú ak chceme vedieť, musíme použiť metódu <code class="code-text">halda.top()</code>.
+    </p><br><br>
+{% endblock content %}
