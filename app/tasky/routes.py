@@ -16,7 +16,7 @@ def tasks():
     tasks = os.listdir(cwd)
     titles = []
     for task in tasks:
-        with open(cwd + "/" + task + "/spec.json", 'r') as f:
+        with open(cwd + "/" + task + "/spec.json", 'r', encoding='utf-8') as f:
             task_info = json.load(f)
             titles.append(task_info['title'])
     is_admin = True if current_user.is_authenticated and current_user.username == 'jakubd' and current_user.email == 'jkubeing@gmail.com' else False

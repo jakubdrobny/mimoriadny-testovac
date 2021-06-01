@@ -2,12 +2,12 @@ import os, json
 
 def get_task_content(task_id):
     task_id = str(task_id)
-    with open(os.getcwd() + "/ulohy/" + task_id + "/content.txt", 'r') as f:
+    with open(os.getcwd() + "/ulohy/" + task_id + "/content.txt", 'r', encoding='utf-8') as f:
         return f.read()
 
 def get_task_info(task_id):
     task_id = str(task_id)
-    with open(os.getcwd() + "/ulohy/" + task_id + "/spec.json", 'r') as f:
+    with open(os.getcwd() + "/ulohy/" + task_id + "/spec.json", 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def get_tasks():
@@ -19,6 +19,6 @@ def get_task_files(task_id, io):
     directory = os.getcwd() + "/ulohy/" + task_id + "/" + io
     for filename in os.listdir(directory):
         if filename[-4:] == '.txt':
-            with open(directory + "/" + filename, 'r') as f:
+            with open(directory + "/" + filename, 'r', encoding='utf-8') as f:
                 tests.append(f.read())
     return tests
