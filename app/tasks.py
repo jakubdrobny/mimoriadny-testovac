@@ -56,6 +56,12 @@ def judge_py(submission_id, input_files, program, output_files, timeout=5):
                 verdicts.append('TLE')
                 run(["isolate", "--cleanup"])
                 continue
+            if errors[:2] != 'OK':
+                outputs.append('')
+                verdicts.append('RE')
+                times.append(69420)
+                run(["isolate", "--cleanup"])
+                continue
             execution_time = int(1000 * float(errors.split()[1][1:]))
             child_process = Popen(['cat', isolate_path + '/box/0.out'], stdout=PIPE)
             output, _ = child_process.communicate()
@@ -64,12 +70,11 @@ def judge_py(submission_id, input_files, program, output_files, timeout=5):
                 outputs.append(output)
                 times.append(execution_time)
                 verdicts.append('AC' if output == output_files[i] else 'WA')
-            else:
-                outputs.append('')
-                verdicts.append('RE')
-                times.append(execution_time)
             run(["isolate", "--cleanup"])
         except:
+            outputs.append('')
+            verdicts.append('RE')
+            times.append(69420)
             run(["isolate", "--cleanup"])
     os.chdir(old_path)
     submission.status = verdicts
