@@ -82,50 +82,79 @@ def judge_py(submission_id, input_files, program, output_files, timeout=5):
     db.session.commit()
     _set_task_progress(100)
 
-# def judge_cpp(input_files, program, output_files, timeout=1):
-#     output = []
-#     verdicts = []
-#     times = []
-#     compiler_path = "/usr/bin/g++"
-#     with cd(os.getcwd()):
-#         for i in range(len(input_files)):
-#             child_process = Popen(['isolate', '--init'], stdin=PIPE, stdout=PIPE)
-#             isolate_path, _ = child_process.communicate()
-#             isolate_path = isolate_path.decode()
-#             isolate_path = isolate_path[:-1]
-#             with open(isolate_path + "/box/0.in", 'w+') as f:
-#                 f.write(input_files[i])
-#             with open(isolate_path + '/box/0.out', 'w') as f:
-#                 pass
-#             with open(isolate_path + '/box/a.cpp', 'w') as f:
-#                 f.write(program)
-#             child_process = Popen(
-#                 [
-#                     'isolate', '--run', '--',
-#                     compiler_path, '-Wall', '-O2', 'a.cpp', '-o', 'a'
-#                 ],
-#                 stdin=PIPE, stdout=PIPE
-#             )
-#             _, compile_errors = child_process.communicate()
-#             print(_, compile_errors)
-#             # child_process = Popen(
-#             #     [
-#             #         'isolate',
-#             #         '--time=%d'%(timeout),
-#             #         '--stdin=0.in',
-#             #         '--stdout=0.out',
-#             #         '--run', '--',
-#             #         sys.executable, '-c', program
-#             #     ],
-#             #     stdin=PIPE, stdout=PIPE, stderr=PIPE
-#             # )
-#             run(["isolate", "--cleanup"])
-
-# program = '''#include <bits/stdc++.h>
-# using namespace std;
-# int main() {
-#     cout << "Hello, world!\n";
-#     return 0;
-# }
-# '''
-# judge_cpp([''], program, [''])
+def judge_cpp(submission_id, input_files, program, output_files, timeout=1):
+    _set_task_progress(0)
+    submission = Submission.query.get(submission_id)
+    outputs = []
+    verdicts = []
+    times = []
+    old_path = os.getcwd()
+    os.chdir(old_path + '/isolate')
+    for i in range(len(input_files)):
+        run(["isolate", "--cleanup"])
+        try:
+            _set_task_progress(100 * i // len(input_files))
+            child_process = Popen(['isolate', '--init'], stdin=PIPE, stdout=PIPE)
+            isolate_path, _ = child_process.communicate()
+            isolate_path = isolate_path.decode()
+            isolate_path = isolate_path[:-1]
+            with open(isolate_path + "/box/a.cpp", 'w+') as f:
+                f.write(program)
+            with open(isolate_path + "/box/0.in", 'w+') as f:
+                f.write(input_files[i])
+            child_process = Popen(
+                [
+                    'isolate',
+                    '-p',
+                    '--run', '--',
+                    '/usr/bin/g++', '-B/usr/bin',
+                    'a.cpp',
+                    '--std=c++17',
+                    '-O2',
+                    '-o',
+                    'a'
+                ],
+                stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            output, errors = child_process.communicate()
+            errors = errors.decode()
+            if errors[:2] != 'OK':
+                outputs.append('')
+                verdicts.append('RE')
+                times.append(69420)
+                run(["isolate", "--cleanup"])
+                continue
+            child_process = Popen(
+                [
+                    'isolate',
+                    '--time=%d'%(timeout),
+                    '--stdin=0.in',
+                    '--run', '--',
+                    './a'
+                ],
+                stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            output, errors = child_process.communicate()
+            output = output.decode()
+            errors = errors.decode()
+            if 'Time limit exceeded' in errors:
+                outputs.append('')
+                times.append(timeout * 1000)
+                verdicts.append('TLE')
+                run(["isolate", "--cleanup"])
+                continue
+            execution_time = int(1000 * float(errors.split()[1][1:]))
+            if errors[:2] == 'OK':
+                outputs.append(output)
+                times.append(execution_time)
+                verdicts.append('AC' if output == output_files[i] else 'WA')
+                # print(output, output_files[i], file=sys.stderr)
+            run(["isolate", "--cleanup"])
+        except:
+            outputs.append('')
+            verdicts.append('RE')
+            times.append(69420)
+            run(["isolate", "--cleanup"])
+    os.chdir(old_path)
+    submission.status = verdicts
+    submission.times = times
+    db.session.commit()
+    _set_task_progress(100)
