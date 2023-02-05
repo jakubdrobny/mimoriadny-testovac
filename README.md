@@ -12,4 +12,5 @@ online judge with code isolation, async judging using redis-queue + learning res
 6. pip install rq
 7. flask run in root folder
 8. rq worker testovac-judge
-6. have fun :)
+9. run make && make install in isolate folder
+10. have fun :)
